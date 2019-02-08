@@ -118,16 +118,16 @@ function RunDockerCompose
 
 	if($IsLinux -eq $true -or $IsMacOS -eq $true)
 	{
-		return docker-compose -f "$PSScriptRoot/../docker-compose.yml" -f "$PSScriptRoot/../docker-compose.unix.yml" $type $options $target | Write-Host
+		return docker-compose -f "$PSScriptRoot/../../docker-compose.yml" -f "$PSScriptRoot/../../docker-compose.unix.yml" $type $options $target | Write-Host
 	}
 	else
 	{
-		return docker-compose -f "$PSScriptRoot/../docker-compose.yml" -f "$PSScriptRoot/../docker-compose.windows.yml" $type $options $target | Write-Host
+		return docker-compose -f "$PSScriptRoot/../../docker-compose.yml" -f "$PSScriptRoot/../../docker-compose.windows.yml" $type $options $target | Write-Host
 	}
 
 }
 
 function CleanDevFiles
 {
-	Remove-Item -ErrorAction SilentlyContinue src/Sannel.House.Devices/app_data/data.db
+	Get-ChildItem "$PSScriptRoot/../../src" -Filter data.db | Remove-Item -ErrorAction SilentlyContinue -Force
 }
