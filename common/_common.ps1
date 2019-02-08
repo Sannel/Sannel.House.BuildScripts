@@ -1,4 +1,4 @@
-. "$PSScriptRoot/../settings.ps1"
+. "$PSScriptRoot/../../settings.ps1"
 
 function SetBuildType
 {
