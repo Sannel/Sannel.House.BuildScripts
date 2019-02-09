@@ -27,7 +27,7 @@ function GetImageName
 	$name = $env:ImageName
 	if($null -eq $name)
 	{
-		$name = (Get-Item ..).Name.ToLower() -replace "\.",""
+		$name = $ImageName
 		$env:ImageName = $name
 	}
 
