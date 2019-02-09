@@ -15,6 +15,8 @@ if($MainOnly)
 
 $version = GetVersion
 
+GetImageName
+
 return RunDockerCompose "push" $version $target
 
 

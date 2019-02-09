@@ -21,6 +21,8 @@ CleanDevFiles
 
 $version = GetVersion
 
+GetImageName
+
 return RunDockerCompose "build" $version $target
 
 

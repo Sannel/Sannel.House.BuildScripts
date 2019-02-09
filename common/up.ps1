@@ -15,4 +15,6 @@ if($MainOnly)
 
 $version = GetVersion
 
+GetImageName
+
 return RunDockerCompose "up" $version $target
