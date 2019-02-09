@@ -1,7 +1,15 @@
 $MainTarget="";
-if(Test-Path "$PSScriptRoot/../../settings.ps1")
+$created=$false;
+if(-not (Test-Path "$PSScriptRoot/../../settings.ps1"))
 {
+	$created=$true;
+	New-Item "$PSScriptRoot/../../settings.ps1"
+}
 . "$PSScriptRoot/../../settings.ps1"
+
+if($created)
+{
+	Remove-Item "$PSScriptRoot/../../settings.ps1"
 }
 
 function SetBuildType
