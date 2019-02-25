@@ -111,7 +111,7 @@ function SetDockerComposeVariables
 	else
 	{
 		Write-Host "Windows"
-		$env:USER="administrator"
+		$env:USER="Administrator"
 		$env:SANNEL_ARCH=GetArchString
 		$env:SANNEL_VERSION=$version
 	}
@@ -127,6 +127,8 @@ function RunDockerCompose
 	)
 
 	SetDockerComposeVariables $version
+
+	Write-Host "User: " $env:USER
 
 	if($IsLinux -eq $true -or $IsMacOS -eq $true)
 	{
