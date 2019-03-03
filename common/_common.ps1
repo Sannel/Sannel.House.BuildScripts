@@ -131,7 +131,12 @@ function CrateDockerFile
 		$dockerData += "USER ContainerUser`n"
 	}
 
-	Set-Content "$PSScriptRoot/../../obj/Dockerfile" -Force -Value $dockerData
+	$objDir = "$PSScriptRoot/../../obj"
+	if(-Not (Test-Path $objDir))
+	{
+		New-Item -ItemType Directory $objDir
+	}
+	Set-Content "$objDir/Dockerfile" -Force -Value $dockerData
 }
 
 function RunDockerCompose
