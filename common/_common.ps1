@@ -117,6 +117,23 @@ function SetDockerComposeVariables
 	}
 }
 
+function CrateDockerFile
+{
+	$dockerData = Get-Content $SourceDockerFile
+
+	if($IsLinux -eq $true -or $IsMacOS -eq $true)
+	{
+		$dockerData += "RUN useradd -m house && chown -R house /app`n";
+		$dockerData += "USER house`n"
+	}
+	else 
+	{
+		$dockerData += "USER ContainerUser`n"
+	}
+
+	Set-Content "$PSScriptRoot/../../obj/Dockerfile" -Force -Value $dockerData
+}
+
 function RunDockerCompose
 {
 	param(
