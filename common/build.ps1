@@ -23,6 +23,8 @@ $version = GetVersion
 
 GetImageName
 
+CrateDockerFile
+
 return RunDockerCompose "build" $version $target
 
 
