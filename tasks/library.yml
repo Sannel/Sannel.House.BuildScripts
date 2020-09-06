@@ -3,7 +3,8 @@ parameters:
 
 jobs:
 - job: build_library
-  pool: ${{parameters['pool']}}
+  pool: 
+    vmImage: ${{parameters['pool']}}
   steps:
   - task: UseDotNet@2
     inputs:
