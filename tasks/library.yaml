@@ -1,0 +1,126 @@
+steps:
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '2.1.x'
+    includePreviewVersions: false
+  condition: eq(variables['support_netcoreapp21'], 'true')
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '3.1.x'
+    includePreviewVersions: false
+  condition: eq(variables['support_netcoreapp31'], 'true')
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '5.0.x'
+    includePreviewVersions: true
+  condition: eq(variables['support_net5_0'], 'true')
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet restore'
+  inputs:
+    command: custom
+    custom: restore
+    arguments: '--configfile .nuget/nuget.config'
+    feedsToUse: config
+    nugetConfigPath: .nuget/nuget.config
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet build Release'
+  inputs:
+    command: 'build'
+    projects: 'src/**/*.csproj'
+    arguments: '-c Release'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet build Debug'
+  inputs:
+    command: 'build'
+    projects: 'src/**/*.csproj'
+    arguments: '-c Debug'
+  condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet publish'
+  inputs:
+    command: 'publish'
+    publishWebProjects: false
+    projects: |
+      src/**/*.csproj
+      !src/**/*Tests.csproj
+    arguments: '-o $(Build.StagingDirectory)/netstandard2.0 -f netstandard2.0'
+    zipAfterPublish: false
+  condition: and(succeeded(), eq(variables['support_netstandard20'], 'true'))
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet publish'
+  inputs:
+    command: publish
+    publishWebProjects: false
+    projects: |
+      src/**/*.csproj
+      !src/**/*Tests.csproj
+    arguments: '-o $(Build.StagingDirectory)/netstandard2.1 -f netstandard2.1'
+    zipAfterPublish: false
+  condition: and(succeeded(), eq(variables['support_netstandard21'], 'true'))
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet publish'
+  inputs:
+    command: publish
+    publishWebProjects: false
+    projects: |
+      src/**/*.csproj
+      !src/**/*Tests.csproj
+    arguments: '-o $(Build.StagingDirectory)/netcoreapp2.1 -f netcoreapp2.1'
+    zipAfterPublish: false
+  condition: and(succeeded(), eq(variables['support_netcoreapp21'], 'true'))
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet publish'
+  inputs:
+    command: publish
+    publishWebProjects: false
+    projects: |
+      src/**/*.csproj
+      !src/**/*Tests.csproj
+    arguments: '-o $(Build.StagingDirectory)/netcoreapp3.1 -f netcoreapp3.1'
+    zipAfterPublish: false
+  condition: and(succeeded(), eq(variables['support_netcoreapp31'], 'true'))
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet publish'
+  inputs:
+    command: publish
+    publishWebProjects: false
+    projects: |
+      src/**/*.csproj
+      !src/**/*Tests.csproj
+    arguments: '-o $(Build.StagingDirectory)/net5.0 -f net5.0'
+    zipAfterPublish: false
+  condition: and(succeeded(), eq(variables['support_net5_0'], 'true'))
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet test'
+  inputs:
+    projects: '**/*Tests.csproj'
+    command: test
+    arguments: '--collect "Code coverage"'
+    publishTestResults: true
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet pack Release'
+  inputs:
+    command: 'pack'
+    feedsToUse: 'select'
+    packagesToPack: src/**/*.csproj
+    configuration: 'Release'
+    versioningScheme: 'off'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet pack Debug'
+  inputs:
+    command: 'pack'
+    feedsToUse: 'select'
+    packagesToPack: src/**/*.csproj
+    configuration: 'Debug'
+    versioningScheme: 'off'
+  condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
+- task: PublishPipelineArtifact@0
+  displayName: 'Publish Pipeline Artifact'
+  inputs:
+    artifactName: 'packages-source'
+    targetPath: '$(Build.StagingDirectory)'
