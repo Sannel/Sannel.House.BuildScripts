@@ -17,13 +17,11 @@ jobs:
       packageType: 'sdk'
       version: '3.1.x'
       includePreviewVersions: false
-    condition: eq(variables['support_netcoreapp31'], 'true')
   - task: UseDotNet@2
     inputs:
       packageType: 'sdk'
       version: '5.0.x'
       includePreviewVersions: true
-    condition: eq(variables['support_net5_0'], 'true')
   - task: DotNetCoreCLI@2
     displayName: 'dotnet restore'
     inputs:
@@ -47,7 +45,7 @@ jobs:
       arguments: '-c Debug'
     condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
   - task: DotNetCoreCLI@2
-    displayName: 'dotnet publish'
+    displayName: 'dotnet publish netstandard2.0'
     inputs:
       command: 'publish'
       publishWebProjects: false
@@ -58,7 +56,7 @@ jobs:
       zipAfterPublish: false
     condition: and(succeeded(), eq(variables['support_netstandard20'], 'true'))
   - task: DotNetCoreCLI@2
-    displayName: 'dotnet publish'
+    displayName: 'dotnet publish netstandard2.1'
     inputs:
       command: publish
       publishWebProjects: false
@@ -69,7 +67,7 @@ jobs:
       zipAfterPublish: false
     condition: and(succeeded(), eq(variables['support_netstandard21'], 'true'))
   - task: DotNetCoreCLI@2
-    displayName: 'dotnet publish'
+    displayName: 'dotnet publish netcoreapp2.1'
     inputs:
       command: publish
       publishWebProjects: false
@@ -80,7 +78,7 @@ jobs:
       zipAfterPublish: false
     condition: and(succeeded(), eq(variables['support_netcoreapp21'], 'true'))
   - task: DotNetCoreCLI@2
-    displayName: 'dotnet publish'
+    displayName: 'dotnet publish netcoreapp3.1'
     inputs:
       command: publish
       publishWebProjects: false
@@ -91,7 +89,7 @@ jobs:
       zipAfterPublish: false
     condition: and(succeeded(), eq(variables['support_netcoreapp31'], 'true'))
   - task: DotNetCoreCLI@2
-    displayName: 'dotnet publish'
+    displayName: 'dotnet publish net5.0'
     inputs:
       command: publish
       publishWebProjects: false
