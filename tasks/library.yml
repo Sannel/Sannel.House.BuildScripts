@@ -106,6 +106,7 @@ jobs:
       command: test
       arguments: '--collect "Code coverage"'
       publishTestResults: true
+    condition: and(succeeded(), ne(variables['disable_tests'], 'true'))
   - task: DotNetCoreCLI@2
     displayName: 'dotnet pack Release'
     inputs:
