@@ -11,7 +11,6 @@ jobs:
       packageType: 'sdk'
       version: '2.1.x'
       includePreviewVersions: false
-    condition: eq(variables['support_netcoreapp21'], 'true')
   - task: UseDotNet@2
     inputs:
       packageType: 'sdk'
