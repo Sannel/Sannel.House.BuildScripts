@@ -1,5 +1,8 @@
 parameters:
-    pool: ubuntu-latest
+  pool: ubuntu-latest
+  publishProjects: |
+    src/**/*.csproj
+    !src/**/*Tests.csproj
 
 jobs:
 - job: build_library
@@ -48,9 +51,7 @@ jobs:
     inputs:
       command: 'publish'
       publishWebProjects: false
-      projects: |
-        src/**/*.csproj
-        !src/**/*Tests.csproj
+      projects: ${{parameters['publishProjects']}}
       arguments: '-o $(Build.StagingDirectory)/netstandard2.0 -f netstandard2.0'
       zipAfterPublish: false
     condition: and(succeeded(), eq(variables['support_netstandard20'], 'true'))
@@ -59,9 +60,7 @@ jobs:
     inputs:
       command: publish
       publishWebProjects: false
-      projects: |
-        src/**/*.csproj
-        !src/**/*Tests.csproj
+      projects: ${{parameters['publishProjects']}}
       arguments: '-o $(Build.StagingDirectory)/netstandard2.1 -f netstandard2.1'
       zipAfterPublish: false
     condition: and(succeeded(), eq(variables['support_netstandard21'], 'true'))
@@ -70,9 +69,7 @@ jobs:
     inputs:
       command: publish
       publishWebProjects: false
-      projects: |
-        src/**/*.csproj
-        !src/**/*Tests.csproj
+      projects: ${{parameters['publishProjects']}}
       arguments: '-o $(Build.StagingDirectory)/netcoreapp2.1 -f netcoreapp2.1'
       zipAfterPublish: false
     condition: and(succeeded(), eq(variables['support_netcoreapp21'], 'true'))
@@ -81,9 +78,7 @@ jobs:
     inputs:
       command: publish
       publishWebProjects: false
-      projects: |
-        src/**/*.csproj
-        !src/**/*Tests.csproj
+      projects: ${{parameters['publishProjects']}}
       arguments: '-o $(Build.StagingDirectory)/netcoreapp3.1 -f netcoreapp3.1'
       zipAfterPublish: false
     condition: and(succeeded(), eq(variables['support_netcoreapp31'], 'true'))
@@ -92,9 +87,7 @@ jobs:
     inputs:
       command: publish
       publishWebProjects: false
-      projects: |
-        src/**/*.csproj
-        !src/**/*Tests.csproj
+      projects: ${{parameters['publishProjects']}}
       arguments: '-o $(Build.StagingDirectory)/net5.0 -f net5.0'
       zipAfterPublish: false
     condition: and(succeeded(), eq(variables['support_net5_0'], 'true'))
