@@ -79,7 +79,7 @@ jobs:
         New-Item -Type Directory -Force $(Build.StagingDirectory)/$(project)/app_data/
         New-Item -Type File -Force $(Build.StagingDirectory)/$(project)/app_data/.hold
         
-        $dockerfile = [string]::Join([Environment]::NewLine, (Get-Content Sannel.House.BuildScripts/build/linux-$(arch)/Dockerfile))
+        $dockerfile = [string]::Join([Environment]::NewLine, (Get-Content Sannel.House.BuildScripts/dockerfiles/linux-$(arch)/Dockerfile))
         $dockerfile = $dockerfile -replace "\`$\{project\}","$(project)"
 
         Set-Content $(Build.StagingDirectory)/Dockerfile -Value $dockerfile

@@ -5,6 +5,7 @@ parameters:
   jobName: "main"
   project: ""
   imageName: ""
+  repositoryName: $(project)
   
 
 jobs:
@@ -13,6 +14,7 @@ jobs:
   variables:
     project: ${{parameters['project']}}
     imageName: ${{parameters['imageName']}}
+    sourceDirectory: ${{parameters['repositoryName']}}
   steps:
     - task: UseDotNet@2
       displayName: 'Use .NET Core sdk $(sdk_version)'
@@ -24,24 +26,23 @@ jobs:
       displayName: 'dotnet restore'
       inputs:
         command: custom
-        projects: src/$(project)/$(project).csproj
+        projects: $(sourceDirectory)/src/$(project)/$(project).csproj
         custom: restore
-        arguments: '-r linux-x64 --configfile .nuget/nuget.config'
+        arguments: '-r linux-x64 --configfile $(sourceDirectory)/.nuget/nuget.config'
         feedsToUse: config
-        nugetConfigPath: .nuget/nuget.config
         externalFeedCredentials: 'Sannel House MyGet'
 
     - task: DotNetCoreCLI@2
       displayName: 'dotnet build Release'
       inputs:
-        projects: src/$(project)/$(project).csproj
+        projects: $(sourceDirectory)/src/$(project)/$(project).csproj
         arguments: '-r linux-x64 -c Release'
       condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
 
     - task: DotNetCoreCLI@2
       displayName: 'dotnet build Debug'
       inputs:
-        projects: src/$(project)/$(project).csproj
+        projects: $(sourceDirectory)/src/$(project)/$(project).csproj
         arguments: '-r linux-x64 -c Debug'
       condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
 
@@ -50,7 +51,7 @@ jobs:
       inputs:
         command: publish
         publishWebProjects: false
-        projects: src/$(project)/$(project).csproj
+        projects: $(sourceDirectory)/src/$(project)/$(project).csproj
         arguments: '-r linux-x64 -o $(Build.StagingDirectory)'
         zipAfterPublish: false
 
@@ -88,7 +89,7 @@ jobs:
         New-Item -Type Directory -Force $(Build.StagingDirectory)/$(project)/app_data/
         New-Item -Type File -Force $(Build.StagingDirectory)/$(project)/app_data/.hold
         
-        $dockerfile = [string]::Join([Environment]::NewLine, (Get-Content build/linux-x64/Dockerfile))
+        $dockerfile = [string]::Join([Environment]::NewLine, (Get-Content Sannel.House.BuildScripts/dockerfiles/linux-x64/Dockerfile))
         $dockerfile = $dockerfile -replace "\`$\{project\}","$(project)"
 
         Set-Content $(Build.StagingDirectory)/Dockerfile -Value $dockerfile
