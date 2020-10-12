@@ -18,6 +18,7 @@ jobs:
     project: ${{parameters['project']}}
     imageName: ${{parameters['imageName']}}
   steps:
+    - checkout: self
     - checkout: templates
     - task: UseDotNet@2
       displayName: 'Use .NET Core sdk $(sdk_version)'
