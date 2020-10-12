@@ -41,9 +41,8 @@ jobs:
         command: custom
         projects: $(sourceDirectory)/src/$(project)/$(project).csproj
         custom: restore
-        arguments: "-r linux-${{parameters['ridSuffix']}} --configfile .nuget/nuget.config"
+        arguments: "-r linux-${{parameters['ridSuffix']}} --configfile $(sourceDirectory)/.nuget/nuget.config"
         feedsToUse: config
-        nugetConfigPath: $(sourceDirectory)/.nuget/nuget.config
         externalFeedCredentials: 'Sannel House MyGet'
     - task: DotNetCoreCLI@2
       displayName: 'dotnet build Release'
