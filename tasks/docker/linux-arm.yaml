@@ -17,6 +17,7 @@ jobs:
     archLong: ${{parameters['archLong']}}
     project: ${{parameters['project']}}
     imageName: ${{parameters['imageName']}}
+    sourceDirectory: $(Build.Repository.Name)
   steps:
     - checkout: self
     - checkout: templates
@@ -37,7 +38,7 @@ jobs:
       displayName: 'dotnet restore'
       inputs:
         command: custom
-        projects: src/$(project)/$(project).csproj
+        projects: $(sourceDirectory)/src/$(project)/$(project).csproj
         custom: restore
         arguments: "-r linux-${{parameters['ridSuffix']}} --configfile .nuget/nuget.config"
         feedsToUse: config
@@ -46,13 +47,13 @@ jobs:
     - task: DotNetCoreCLI@2
       displayName: 'dotnet build Release'
       inputs:
-        projects: src/$(project)/$(project).csproj
+        projects: $(sourceDirectory)/src/$(project)/$(project).csproj
         arguments: "-r linux-${{parameters['ridSuffix']}} -c Release"
       condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     - task: DotNetCoreCLI@2
       displayName: 'dotnet build Debug'
       inputs:
-        projects: src/$(project)/$(project).csproj
+        projects: $(sourceDirectory)/src/$(project)/$(project).csproj
         arguments: "-r linux-${{parameters['ridSuffix']}} -c Debug"
       condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
     - task: DotNetCoreCLI@2
@@ -60,13 +61,13 @@ jobs:
       inputs:
         command: publish
         publishWebProjects: false
-        projects: src/$(project)/$(project).csproj
+        projects: $(sourceDirectory)/src/$(project)/$(project).csproj
         arguments: "-r linux-${{parameters['ridSuffix']}} -o $(Build.StagingDirectory)"
         zipAfterPublish: false
     - task: CopyFiles@2
       displayName: 'Copy Files to: $(Build.StagingDirectory)/$(project)/app_config/'
       inputs:
-        SourceFolder: 'src/$(project)/app_config'
+        SourceFolder: '$(sourceDirectory)/src/$(project)/app_config'
         Contents: |
           **/*.json
           **/*.yml
@@ -78,7 +79,7 @@ jobs:
         New-Item -Type Directory -Force $(Build.StagingDirectory)/$(project)/app_data/
         New-Item -Type File -Force $(Build.StagingDirectory)/$(project)/app_data/.hold
         
-        $dockerfile = [string]::Join([Environment]::NewLine, (Get-Content templates/build/linux-$(arch)/Dockerfile))
+        $dockerfile = [string]::Join([Environment]::NewLine, (Get-Content Sannel.House.BuildScripts/build/linux-$(arch)/Dockerfile))
         $dockerfile = $dockerfile -replace "\`$\{project\}","$(project)"
 
         Set-Content $(Build.StagingDirectory)/Dockerfile -Value $dockerfile
