@@ -16,6 +16,8 @@ jobs:
     imageName: ${{parameters['imageName']}}
     sourceDirectory: ${{parameters['repositoryName']}}
   steps:
+    - checkout: self
+    - checkout: templates
     - task: UseDotNet@2
       displayName: 'Use .NET Core sdk $(sdk_version)'
       inputs:
