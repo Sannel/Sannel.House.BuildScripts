@@ -61,21 +61,20 @@ jobs:
       displayName: 'dotnet restore'
       inputs:
         command: custom
-        projects: '**/*Tests.csproj'
+        projects: '$(sourceDirectory)/**/*Tests.csproj'
         custom: restore
-        arguments: '-r linux-x64 --configfile .nuget/nuget.config'
+        arguments: '-r linux-x64 --configfile $(sourceDirectory)/.nuget/nuget.config'
         feedsToUse: config
-        nugetConfigPath: .nuget/nuget.config
         externalFeedCredentials: 'Sannel House MyGet'
-      condition: eq(variables['hasTests'], 'true')
+      condition: and(succeeded(), eq(variables['hasTests'], 'true'))
     - task: DotNetCoreCLI@2
       displayName: 'dotnet test'
       inputs:
-        projects: '**/*Tests.csproj'
+        projects: '$(sourceDirectory)/**/*Tests.csproj'
         command: test
         arguments: '--collect "Code coverage"'
         publishTestResults: true
-      condition: eq(variables['hasTests'], 'true')
+      condition: and(succeeded(), eq(variables['hasTests'], 'true'))
     - task: CopyFiles@2
       displayName: 'Copy Files to: $(Build.StagingDirectory)/$(project)/app_config/'
       inputs:
