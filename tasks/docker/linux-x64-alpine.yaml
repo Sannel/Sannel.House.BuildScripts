@@ -28,7 +28,7 @@ jobs:
         command: custom
         projects: $(sourceDirectory)/src/$(project)/$(project).csproj
         custom: restore
-        arguments: '-r linux-musl-x64 --configfile $(sourceDirectory)/.nuget/nuget.config'
+        arguments: "-r linux-musl-x64 --configfile $(sourceDirectory)/.nuget/nuget.config"
         feedsToUse: config
         externalFeedCredentials: 'Sannel House MyGet'
 
