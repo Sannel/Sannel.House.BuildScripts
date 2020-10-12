@@ -8,6 +8,7 @@ parameters:
   ridSuffix: arm64
   project: ""
   imageName: ""
+  repositoryName: $(project)
 
 jobs:
 - job: linux_${{parameters['arch']}}_${{parameters['jobName']}}
@@ -17,7 +18,7 @@ jobs:
     archLong: ${{parameters['archLong']}}
     project: ${{parameters['project']}}
     imageName: ${{parameters['imageName']}}
-    sourceDirectory: $(Build.Repository.Name)
+    sourceDirectory: ${{parameters['repositoryName']}}
   steps:
     - checkout: self
     - checkout: templates
