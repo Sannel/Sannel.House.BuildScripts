@@ -93,10 +93,10 @@ jobs:
         $dockerfile = ""
         if(('$(sdk_version)' -eq '3.1.x') -or ('$(sdk_version)' -eq '2.1.x'))
         {
-          $dockerfile = [string]::Join([Environment]::NewLine, (Get-Content Sannel.House.BuildScripts/netcore/dockerfiles/linux-x64-alpine/Dockerfile))
+          $dockerfile = [string]::Join([Environment]::NewLine, (Get-Content Sannel.House.BuildScripts/netcore/linux-x64-alpine/Dockerfile))
         }
         else{
-          $dockerfile = [string]::Join([Environment]::NewLine, (Get-Content Sannel.House.BuildScripts/net/dockerfiles/linux-x64-alpine/Dockerfile))
+          $dockerfile = [string]::Join([Environment]::NewLine, (Get-Content Sannel.House.BuildScripts/net/linux-x64-alpine/Dockerfile))
         }
         $dockerfile = $dockerfile -replace "\`$\{project\}","$(project)"
 
