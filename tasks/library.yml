@@ -52,7 +52,7 @@ jobs:
       command: 'publish'
       publishWebProjects: false
       projects: ${{parameters['publishProjects']}}
-      arguments: '-o $(Build.StagingDirectory)/netstandard2.0 -f netstandard2.0'
+      arguments: '-o $(Build.StagingDirectory)/netstandard2.0 -f netstandard2.0 --no-restore'
       zipAfterPublish: false
     condition: and(succeeded(), eq(variables['support_netstandard20'], 'true'))
   - task: DotNetCoreCLI@2
@@ -61,7 +61,7 @@ jobs:
       command: publish
       publishWebProjects: false
       projects: ${{parameters['publishProjects']}}
-      arguments: '-o $(Build.StagingDirectory)/netstandard2.1 -f netstandard2.1'
+      arguments: '-o $(Build.StagingDirectory)/netstandard2.1 -f netstandard2.1 --no-restore'
       zipAfterPublish: false
     condition: and(succeeded(), eq(variables['support_netstandard21'], 'true'))
   - task: DotNetCoreCLI@2
@@ -70,7 +70,7 @@ jobs:
       command: publish
       publishWebProjects: false
       projects: ${{parameters['publishProjects']}}
-      arguments: '-o $(Build.StagingDirectory)/netcoreapp2.1 -f netcoreapp2.1'
+      arguments: '-o $(Build.StagingDirectory)/netcoreapp2.1 -f netcoreapp2.1 --no-restore'
       zipAfterPublish: false
     condition: and(succeeded(), eq(variables['support_netcoreapp21'], 'true'))
   - task: DotNetCoreCLI@2
@@ -79,7 +79,7 @@ jobs:
       command: publish
       publishWebProjects: false
       projects: ${{parameters['publishProjects']}}
-      arguments: '-o $(Build.StagingDirectory)/netcoreapp3.1 -f netcoreapp3.1'
+      arguments: '-o $(Build.StagingDirectory)/netcoreapp3.1 -f netcoreapp3.1 --no-restore'
       zipAfterPublish: false
     condition: and(succeeded(), eq(variables['support_netcoreapp31'], 'true'))
   - task: DotNetCoreCLI@2
@@ -88,7 +88,7 @@ jobs:
       command: publish
       publishWebProjects: false
       projects: ${{parameters['publishProjects']}}
-      arguments: '-o $(Build.StagingDirectory)/net5.0 -f net5.0'
+      arguments: '-o $(Build.StagingDirectory)/net5.0 -f net5.0 --no-restore'
       zipAfterPublish: false
     condition: and(succeeded(), eq(variables['support_net5_0'], 'true'))
   - task: DotNetCoreCLI@2
@@ -107,6 +107,7 @@ jobs:
       packagesToPack: src/**/*.csproj
       configuration: 'Release'
       versioningScheme: 'off'
+      arguments: '--no-restore'
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   - task: DotNetCoreCLI@2
     displayName: 'dotnet pack Debug'
@@ -116,6 +117,7 @@ jobs:
       packagesToPack: src/**/*.csproj
       configuration: 'Debug'
       versioningScheme: 'off'
+      arguments: '--no-restore'
     condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
   - task: PublishPipelineArtifact@0
     displayName: 'Publish Pipeline Artifact'
