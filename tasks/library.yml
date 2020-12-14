@@ -102,22 +102,18 @@ jobs:
   - task: DotNetCoreCLI@2
     displayName: 'dotnet pack Release'
     inputs:
-      command: 'pack'
-      feedsToUse: 'select'
-      packagesToPack: src/**/*.csproj
-      configuration: 'Release'
-      versioningScheme: 'off'
-      arguments: '--no-restore'
+      command: custom
+      custom: pack
+      projects: src/**/*.csproj
+      arguments: '-c Release --no-restore'
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   - task: DotNetCoreCLI@2
     displayName: 'dotnet pack Debug'
     inputs:
-      command: 'pack'
-      feedsToUse: 'select'
-      packagesToPack: src/**/*.csproj
-      configuration: 'Debug'
-      versioningScheme: 'off'
-      arguments: '--no-restore'
+      command: custom
+      custom: pack
+      projects: src/**/*.csproj
+      arguments: '-c Debug --no-restore'
     condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
   - task: PublishPipelineArtifact@0
     displayName: 'Publish Pipeline Artifact'
