@@ -38,14 +38,14 @@ jobs:
       command: 'build'
       projects: 'src/**/*.csproj'
       arguments: '-c Release --no-restore'
-    condition: or(and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master')), and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/head/main')))
+    condition: or(and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master')), and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main')))
   - task: DotNetCoreCLI@2
     displayName: 'dotnet build Debug'
     inputs:
       command: 'build'
       projects: 'src/**/*.csproj'
       arguments: '-c Debug --no-restore'
-    condition: and(and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master')), and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/head/main')))
+    condition: and(and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master')), and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main')))
   - task: DotNetCoreCLI@2
     displayName: 'dotnet publish netstandard2.0'
     inputs:
