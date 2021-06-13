@@ -106,7 +106,7 @@ jobs:
       custom: pack
       projects: src/**/*.csproj
       arguments: '-c Release --no-restore -o $(Build.StagingDirectory)'
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    condition: or(and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master')), and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main')))
   - task: DotNetCoreCLI@2
     displayName: 'dotnet pack Debug'
     inputs:
@@ -114,7 +114,7 @@ jobs:
       custom: pack
       projects: src/**/*.csproj
       arguments: '-c Debug --no-restore -o $(Build.StagingDirectory)'
-    condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
+    condition: and(and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master')), and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/main')))
   - task: PublishPipelineArtifact@0
     displayName: 'Publish Pipeline Artifact'
     inputs:
