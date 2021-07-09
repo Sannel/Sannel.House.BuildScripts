@@ -24,6 +24,11 @@ jobs:
       packageType: 'sdk'
       version: '5.0.x'
       includePreviewVersions: false
+  - task: UseDotNet@2
+    inputs:
+      packageType: 'sdk'
+      version: '6.0.x'
+      includePreviewVersions: true
   - task: DotNetCoreCLI@2
     displayName: 'dotnet restore'
     inputs:
@@ -91,6 +96,15 @@ jobs:
       arguments: '-o $(Build.StagingDirectory)/net5.0 -f net5.0 --no-restore'
       zipAfterPublish: false
     condition: and(succeeded(), eq(variables['support_net5_0'], 'true'))
+  - task: DotNetCoreCLI@2
+    displayName: 'dotnet publish net5.0'
+    inputs:
+      command: publish
+      publishWebProjects: false
+      projects: ${{parameters['publishProjects']}}
+      arguments: '-o $(Build.StagingDirectory)/net6.0 -f net6.0 --no-restore'
+      zipAfterPublish: false
+    condition: and(succeeded(), eq(variables['support_net6_0'], 'true'))
   - task: DotNetCoreCLI@2
     displayName: 'dotnet test'
     inputs:
